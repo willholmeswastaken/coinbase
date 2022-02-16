@@ -12,7 +12,7 @@ const Dashboard: React.FC<DashboardProps> = ({ address }) => {
     <div className="flex h-auto w-screen bg-black text-white overflow-auto">
       <Sidebar />
       <div className="flex-1">
-        <Header />
+        <Header walletAddress={address} connectWallet={() => {}} />
         <Main />
       </div>
     </div>
