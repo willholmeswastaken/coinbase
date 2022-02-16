@@ -7,7 +7,7 @@ const Portfolio = () => {
   return (
     <div className="flex flex-[1] justify-center">
       <div className="w-full max-w-[1000px] pt-8 pr-4">
-        <div className="mt-4 rounded-md border border-solid border-[#282b2f]">
+        <div className="mt-2 rounded-md border border-solid border-[#282b2f]">
           <div id="tableItem" className="pt-4 pl-8 pb-4">
             <div className="text-2xl font-semibold">Your Assets</div>
           </div>
