@@ -5,3 +5,11 @@
 .header-button {
     @apply border border-solid border-[#282b2f] p-3 text-xl font-medium rounded-md mr-4 hover:cursor-pointer;
 }
+
+.portfolio-table-row {
+    @apply w-full flex justify-between text-xl;
+}
+
+.divider {
+    @apply border-b border-solid border-[#282b2f];
+}
