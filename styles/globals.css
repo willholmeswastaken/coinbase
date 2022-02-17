@@ -13,3 +13,7 @@
 .divider {
     @apply border-b border-solid border-[#282b2f];
 }
+
+.promo-offer-card {
+    @apply w-[21rem] h-44 border border-solid border-[#282b2f] mb-4 p-6 flex flex-col rounded-md;
+}
