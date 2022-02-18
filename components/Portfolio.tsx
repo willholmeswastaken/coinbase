@@ -1,10 +1,40 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { BsThreeDotsVertical } from 'react-icons/bs'
 import { coins } from '../static/coins'
 import Coin from './Coin'
 import BalanceChart from './BalanceChart'
+import { Result } from '../data/SanityCoins'
+import { TokenModule } from '@3rdweb/sdk'
 
-const Portfolio = () => {
+interface PortfolioProps {
+  walletAddress: string
+  sanityTokens: Result[]
+  thirdWebTokens: TokenModule[]
+}
+const Portfolio: React.FC<PortfolioProps> = ({
+  walletAddress,
+  sanityTokens,
+  thirdWebTokens,
+}) => {
+  const[balance, setBalance] = useState<number>(0)
+  const tokenToUsd: any = {}
+  for(const token of sanityTokens) {
+    tokenToUsd[token.contractAddress] = Number(token.usdPrice)
+  }
+  
+  useEffect(() => {
+    const getBalance = async () => {
+      const totalBalance = await Promise.all(
+        thirdWebTokens.map(async token => {
+          const balance = await token.balanceOf(walletAddress)
+          return Number(balance.displayValue) * tokenToUsd[token.address]
+        })
+      )
+      setBalance(totalBalance.reduce((acc, curr) => acc + curr, 0))
+    }
+    getBalance()
+  }, [thirdWebTokens, sanityTokens])
+
   return (
     <div className="flex flex-[1] justify-center">
       <div className="w-full max-w-[1000px] px-4 pt-8">
@@ -12,7 +42,7 @@ const Portfolio = () => {
           <div className="px-2">
             <div>
               <div className="text-sm text-[#8a919e]">Portfolio Balance</div>
-              <div className="my-[0.5rem] px-0 text-3xl font-bold">{`$46,000`}</div>
+              <div className="my-[0.5rem] px-0 text-3xl font-bold">{`$${balance.toLocaleString()}`}</div>
             </div>
             <BalanceChart />
           </div>
@@ -36,8 +66,8 @@ const Portfolio = () => {
             </div>
             <div className="divider"></div>
             <div>
-              {coins.map((x) => (
-                <div>
+              {coins.map((x, index) => (
+                <div key={index}>
                   <Coin
                     name={x.name}
                     logo={x.logo}
@@ -52,7 +82,6 @@ const Portfolio = () => {
                 </div>
               ))}
             </div>
-            <th className="text-left"></th>
           </table>
         </div>
       </div>
