@@ -2,12 +2,19 @@ import React, { useEffect, useState } from 'react'
 import { FaWallet } from 'react-icons/fa'
 import imageUrlBuilder from '@sanity/image-url'
 import { client } from '../../lib/sanity'
+import { Result } from '../../data/SanityCoins'
+import { TokenModule } from '@3rdweb/sdk'
 
 interface TransferContentProps {
-  selectedToken: any
+  selectedToken: Result
   setAction: any
-  thirdWebTokens: any
+  thirdWebTokens: TokenModule[]
   walletAddress: string
+}
+
+interface DisplayToken {
+  name: string
+  symbol: string
 }
 
 const TransferContent: React.FC<TransferContentProps> = ({
@@ -18,11 +25,49 @@ const TransferContent: React.FC<TransferContentProps> = ({
 }) => {
   const [amount, setAmount] = useState<string>()
   const [recipient, setRecipient] = useState<string>()
+  const [imageUrl, setImageUrl] = useState<string>()
+  const [activeThirdWebToken, setActiveThirdWebToken] = useState<TokenModule>()
+  const [balance, setBalance] = useState<string>('Fetching')
+
+  const displayToken: DisplayToken = {
+    name: selectedToken?.name ?? 'Fetching',
+    symbol: selectedToken?.symbol ?? 'Fetching',
+  }
+
   useEffect(() => {
-      if(selectedToken === undefined) return
-      const url = imageUrlBuilder(client).image(selectedToken.logo).url()
-      console.log(url)
+    if (selectedToken === undefined) return
+    const activeToken = thirdWebTokens.find(
+      (x: { address: any }) => x.address === selectedToken.contractAddress
+    )
+    setActiveThirdWebToken(activeToken)
+  }, [thirdWebTokens, selectedToken])
+
+  useEffect(() => {
+    if (selectedToken === undefined) return
+    setImageUrl(imageUrlBuilder(client).image(selectedToken.logo).url())
   }, [selectedToken])
+
+  useEffect(() => {
+    const getBalance = async () => {
+      const balance = await activeThirdWebToken?.balanceOf(walletAddress)
+      setBalance(balance?.displayValue!)
+    }
+    if (activeThirdWebToken) getBalance()
+  }, [activeThirdWebToken])
+
+  const sendTokens = async () => {
+    console.log('sending')
+    if (activeThirdWebToken && amount && recipient) {
+      const transaction = await activeThirdWebToken.transfer(
+        recipient,
+        amount.toString().concat('000000000000000000')
+      )
+      console.log(transaction)
+      console.log('transferred')
+    } else {
+      console.error('missing data')
+    }
+  }
   return (
     <div className="flex h-full flex-1 flex-col">
       <div className="flex flex-1 flex-col">
@@ -72,7 +117,7 @@ const TransferContent: React.FC<TransferContentProps> = ({
               className="mr-4 grid h-7 w-7 place-items-center overflow-hidden rounded-lg"
             >
               <img
-                src="https://pbs.twimg.com/card_img/1492856766534537217/Rz9RJade?format=png&name=small"
+                src={imageUrl}
                 alt="coin"
                 className="h-[120%] w-[120%] object-cover"
               />
@@ -81,19 +126,24 @@ const TransferContent: React.FC<TransferContentProps> = ({
               id="coinname"
               className="mr-2 flex border-none bg-inherit text-xl text-white outline-none"
             >
-              Ethereum
+              {displayToken.name}
             </div>
           </div>
         </div>
       </div>
       <div className="transfer-row">
-        <button className="w-full rounded-lg bg-[#3773f5] p-4 text-center text-xl text-white hover:cursor-pointer hover:bg-[#4a80f6]">
+        <button
+          className="w-full rounded-lg bg-[#3773f5] p-4 text-center text-xl text-white hover:cursor-pointer hover:bg-[#4a80f6]"
+          onClick={() => sendTokens()}
+        >
           Continue
         </button>
       </div>
       <div className="transfer-row">
-        <div>ETH Balance</div>
-        <div>1.2 ETH</div>
+        <div>{displayToken.symbol} Balance</div>
+        <div>
+          {balance} {displayToken.symbol}
+        </div>
       </div>
     </div>
   )

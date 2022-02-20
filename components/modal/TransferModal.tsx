@@ -1,10 +1,12 @@
+import { TokenModule } from '@3rdweb/sdk'
 import React, { useEffect, useState } from 'react'
+import { Result } from '../../data/SanityCoins'
 import TransferContent from './TransferContent'
 
 interface TransferModalProps {
-  sanityTokens: any
-  thirdWebTokens: any
-  walletAddress: any
+  sanityTokens: Result[]
+  thirdWebTokens: TokenModule[]
+  walletAddress: string
 }
 
 const TransferModal: React.FC<TransferModalProps> = ({
