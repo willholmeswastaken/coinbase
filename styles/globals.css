@@ -17,3 +17,34 @@
 .promo-offer-card {
     @apply w-[21rem] h-44 border border-solid border-[#282b2f] mb-4 p-6 flex flex-col rounded-md;
 }
+
+.send-recieve-option {
+    @apply grid h-full w-full place-items-center text-lg font-semibold hover:cursor-pointer hover:bg-[#111214];
+}
+
+.selected-option {
+    @apply text-[#3773f5];
+}
+
+.unselected-option {
+    @apply border border-solid border-[#282b2f]
+}
+
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+  -webkit-appearance: none; 
+  margin: 0; 
+}
+
+.transfer-items-container {
+    @apply flex flex-1 items-end;
+}
+.transfer-row {
+    @apply flex items-center justify-between py-4 px-0 text-xl text-[#8a919e];
+}
+.transfer-divider {
+    @apply border-b border-solid border-[#282b2f];
+}
+.transfer-field-name {
+    @apply flex-[0.5] pl-8;
+}
