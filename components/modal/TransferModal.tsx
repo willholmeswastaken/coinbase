@@ -1,6 +1,7 @@
 import { TokenModule } from '@3rdweb/sdk'
 import React, { useEffect, useState } from 'react'
 import { Result } from '../../data/SanityCoins'
+import CoinSelector from './CoinSelector'
 import TransferContent from './TransferContent'
 
 interface TransferModalProps {
@@ -17,13 +18,25 @@ const TransferModal: React.FC<TransferModalProps> = ({
   const [action, setAction] = useState<string>('send')
   const [selectedToken, setSelectedToken] = useState(sanityTokens[0])
   useEffect(() => {
-    if(selectedToken === undefined && sanityTokens.length > 0) setSelectedToken(sanityTokens[0])
+    if (selectedToken === undefined && sanityTokens.length > 0)
+      setSelectedToken(sanityTokens[0])
   }, [sanityTokens])
 
   const selectedModal = (option: string) => {
     switch (option) {
       case 'receive':
         return <h2>receive</h2>
+      case 'select':
+        return (
+          <CoinSelector
+            setAction={setAction}
+            selectedToken={selectedToken}
+            setSelectedToken={setSelectedToken}
+            sanityTokens={sanityTokens}
+            thirdWebTokens={thirdWebTokens}
+            walletAddress={walletAddress}
+          />
+        )
       default:
         return (
           <TransferContent
@@ -41,7 +54,7 @@ const TransferModal: React.FC<TransferModalProps> = ({
       <div id="selector" className="flex h-20 items-center justify-evenly">
         <div
           className={`send-recieve-option ${
-            action === 'send' ? 'selected-option' : 'unselected-option'
+            (action === 'send' || action == 'select') ? 'selected-option' : 'unselected-option'
           }`}
           onClick={() => setAction('send')}
         >

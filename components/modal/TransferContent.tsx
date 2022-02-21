@@ -111,6 +111,7 @@ const TransferContent: React.FC<TransferContentProps> = ({
           <div
             id="coin-select-list"
             className="flex h-full flex-[1.3] hover:cursor-pointer"
+            onClick={() => setAction('select')}
           >
             <div
               id="icon"
