@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { TailSpin } from 'react-loader-spinner'
 import { Result } from '../../data/SanityCoins'
 import CoinSelector from './CoinSelector'
+import Receive from './Receive'
 import TransferContent from './TransferContent'
 
 interface TransferModalProps {
@@ -26,7 +27,13 @@ const TransferModal: React.FC<TransferModalProps> = ({
   const selectedModal = (option: string) => {
     switch (option) {
       case 'receive':
-        return <h2>receive</h2>
+        return (
+          <Receive
+            selectedToken={selectedToken}
+            walletAddress={walletAddress}
+            setAction={setAction}
+          />
+        )
       case 'transfer':
         return (
           <div className="flex h-full w-full flex-col items-center justify-center text-2xl">
@@ -41,11 +48,11 @@ const TransferModal: React.FC<TransferModalProps> = ({
         )
       case 'transferred':
         return (
-          <div className="flex flex-col h-full w-full items-center justify-center text-3xl font-semibold text-[#27ad75]">
+          <div className="flex h-full w-full flex-col items-center justify-center text-3xl font-semibold text-[#27ad75]">
             Transfer complete!
             <button
-              className="w-full mt-8 rounded-lg bg-[#3773f5] p-4 text-center text-xl text-white hover:cursor-pointer hover:bg-[#4a80f6]"
-              onClick={() => setAction('send' )}
+              className="mt-8 w-full rounded-lg bg-[#3773f5] p-4 text-center text-xl text-white hover:cursor-pointer hover:bg-[#4a80f6]"
+              onClick={() => setAction('send')}
             >
               Done
             </button>

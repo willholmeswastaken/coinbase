@@ -56,15 +56,12 @@ const TransferContent: React.FC<TransferContentProps> = ({
   }, [activeThirdWebToken])
 
   const sendTokens = async () => {
-    console.log('sending')
     if (activeThirdWebToken && amount && recipient) {
       setAction('transfer')
       const transaction = await activeThirdWebToken.transfer(
         recipient,
         amount.toString().concat('000000000000000000')
       )
-      console.log(transaction)
-      console.log('transferred')
       setAction('transferred')
     } else {
       console.error('missing data')
