@@ -21,7 +21,7 @@ const CoinSelector: React.FC<CoinSelectorProps> = ({
   walletAddress,
 }) => {
   return (
-    <div>
+    <div className="w-full">
       <div className="mb-4 w-full text-center text-2xl">Select Asset</div>
       <div className="flex flex-col">
         {sanityTokens.map((x, index) => (

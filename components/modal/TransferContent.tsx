@@ -31,7 +31,7 @@ const TransferContent: React.FC<TransferContentProps> = ({
 
   const displayToken: DisplayToken = {
     name: selectedToken?.name ?? 'Fetching',
-    symbol: selectedToken?.symbol ?? 'Fetching',
+    symbol: selectedToken?.symbol ?? '...',
   }
 
   useEffect(() => {
@@ -58,12 +58,14 @@ const TransferContent: React.FC<TransferContentProps> = ({
   const sendTokens = async () => {
     console.log('sending')
     if (activeThirdWebToken && amount && recipient) {
+      setAction('transfer')
       const transaction = await activeThirdWebToken.transfer(
         recipient,
         amount.toString().concat('000000000000000000')
       )
       console.log(transaction)
       console.log('transferred')
+      setAction('transferred')
     } else {
       console.error('missing data')
     }
@@ -79,7 +81,7 @@ const TransferContent: React.FC<TransferContentProps> = ({
             value={amount}
             onChange={(e) => setAmount(e.target.value)}
           />
-          <span className="mb-2 text-5xl text-[#3773f5]">ETH</span>
+          <span className="mb-2 text-5xl text-[#3773f5]">{displayToken.symbol.toUpperCase()}</span>
         </div>
         <div
           className={`pt-4 pr-0 pb-8 pl-0 text-center ${
@@ -115,7 +117,7 @@ const TransferContent: React.FC<TransferContentProps> = ({
           >
             <div
               id="icon"
-              className="mr-4 grid h-7 w-7 place-items-center overflow-hidden rounded-lg"
+              className="mr-4 grid h-7 w-7 place-items-center overflow-hidden rounded-full"
             >
               <img
                 src={imageUrl}
